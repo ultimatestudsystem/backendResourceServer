@@ -29,3 +29,4 @@ target/
 UltimateStudSystem.iml
 firebase-config.json
 storage/
+application-local.yml

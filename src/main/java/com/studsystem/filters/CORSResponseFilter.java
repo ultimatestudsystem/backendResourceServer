@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.studsystem;
+package com.studsystem.filters;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -20,7 +20,6 @@ public class CORSResponseFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));

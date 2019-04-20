@@ -1,9 +1,9 @@
-package com.studsystem.controllers;
+package com.studsystem.controllers.rest;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
-import com.studsystem.services.FirebaseUploadDownloadService;
+import com.studsystem.interfaces.FirebaseUploadDownloadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@RestController
+@RestController()
 public class FirebaseController {
 
     @Value("${secret.admin}")
@@ -30,21 +30,11 @@ public class FirebaseController {
     @Autowired
     private FirebaseUploadDownloadService uploadDownloadService;
 
-    @GetMapping("/test")
+    @GetMapping("/storage/test")
     public String getUIDTest(@RequestParam String idToken) throws FirebaseAuthException {
-      /*  UserRecord.CreateRequest request = new UserRecord.CreateRequest();
-        request.setEmail("demirel6777teacher@gmail.com");
-        request.setPassword("test12");
-        UserRecord user = FirebaseAuth.getInstance().createUser(request);
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("isTeacher",true);
-        claims.put("secret", secretTeacher);
-        FirebaseAuth.getInstance().setCustomClaims(user.getUid(),claims );
-      */  FirebaseToken firebaseToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
+        FirebaseToken firebaseToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
         return firebaseToken.getUid();
     }
-
-
 
     @PutMapping("/storage/upload/{ref}")
     public ResponseEntity uploadFile(@PathVariable("ref") String ref,
@@ -55,8 +45,10 @@ public class FirebaseController {
         FirebaseToken firebaseToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
         if (firebaseToken.getUid() != null){
             uploadDownloadService.uploadFile(multipartFile, ref, refUID, subjectName, firebaseToken.getUid());
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/storage/download/{ref}/{filename:.+}")
@@ -64,9 +56,9 @@ public class FirebaseController {
                                   @RequestParam("refUID") String refUID,
                                   @PathVariable("filename") String filename,
                                   HttpServletResponse response) throws IOException {
-        if (uploadDownloadService.downloadFile(ref, refUID, filename, response))
+        if (uploadDownloadService.downloadFile(ref, refUID, filename, response)) {
             return ResponseEntity.ok().build();
-
+        }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 

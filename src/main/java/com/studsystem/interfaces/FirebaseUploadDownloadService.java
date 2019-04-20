@@ -1,4 +1,4 @@
-package com.studsystem.services;
+package com.studsystem.interfaces;
 
 import org.springframework.web.multipart.MultipartFile;
 

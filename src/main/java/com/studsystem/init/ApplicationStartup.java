@@ -6,7 +6,7 @@ import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.studsystem.enums.UserType;
-import com.studsystem.services.FirebaseUserService;
+import com.studsystem.interfaces.FirebaseUserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -32,7 +32,7 @@ public class ApplicationStartup implements ApplicationRunner {
     private String secretAdmin;
 
     @Autowired
-    private FirebaseUserService firebaseUserService;
+    private FirebaseUserProfileService firebaseUserService;
 
     @Override
     public void run(ApplicationArguments applicationArguments) throws Exception {
@@ -46,7 +46,8 @@ public class ApplicationStartup implements ApplicationRunner {
                 FirebaseAuth.getInstance().getUserByEmail(adminEmail);
             }catch (FirebaseAuthException e){
                 try {
-                    firebaseUserService.createUser(adminEmail, adminPass, UserType.ADMIN.name().toLowerCase(), secretAdmin);
+                    firebaseUserService.createUser(adminEmail, adminPass, UserType.ADMIN.name().toLowerCase(),
+                            "NONE", "NONE", "NONE", "NONE", "NONE", "NONE", secretAdmin);
                 } catch (FirebaseAuthException e1) {
                     e1.printStackTrace();
                 }

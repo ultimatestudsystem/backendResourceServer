@@ -1,9 +1,8 @@
 package com.studsystem.services;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.UserRecord;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.studsystem.interfaces.FirebaseUploadDownloadService;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,13 +23,11 @@ import java.util.Map;
 @Service
 public class FirebaseUploadDownloadServiceImpl implements FirebaseUploadDownloadService {
 
-
     @Value("${storage.path}")
     private String storagePath;
 
     @Override
     public void uploadFile(MultipartFile multipartFile, String ref, String refUID, String subjectName, String uid) throws IOException {
-//        FirebaseAuth.getInstance().getUser(uid)
         Path path = Paths.get(storagePath, refUID, ref);
         File folder = path.toFile();
         if (folder.exists() || folder.mkdirs()){
@@ -48,11 +45,11 @@ public class FirebaseUploadDownloadServiceImpl implements FirebaseUploadDownload
                 Map<String, String> map = new HashMap<>();
                 map.put("date", new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
                 map.put("message", fileName);
-
                 dataRef.setValueAsync(map);
             }
         }
     }
+
     @Override
     public boolean downloadFile(String ref, String refUID, String filename, HttpServletResponse response) throws IOException {
         File folderRefUID = new File(storagePath, refUID);

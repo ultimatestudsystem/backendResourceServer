@@ -31,9 +31,9 @@ public class FirebaseController {
     private FirebaseUploadDownloadService uploadDownloadService;
 
     @GetMapping("/storage/test")
-    public String getUIDTest(@RequestParam String idToken) throws FirebaseAuthException {
+    public ResponseEntity getUIDTest(@RequestParam String idToken) throws FirebaseAuthException {
         FirebaseToken firebaseToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
-        return firebaseToken.getUid();
+        return ResponseEntity.ok().body(firebaseToken.getUid());
     }
 
     @PutMapping("/storage/upload/{ref}")

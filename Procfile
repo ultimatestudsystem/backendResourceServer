@@ -1,1 +1,1 @@
-web: mvn package && java -jar target/ultimatestudsystem-app.jar
+web: java -jar target/ultimatestudsystem-app.jar

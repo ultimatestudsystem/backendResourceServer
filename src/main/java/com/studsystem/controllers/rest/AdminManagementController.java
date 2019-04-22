@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController()
+@RestController
 public class AdminManagementController {
 
     @Autowired
@@ -50,5 +50,9 @@ public class AdminManagementController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/")
+    public ResponseEntity index() {
+        return ResponseEntity.notFound().build();
+    }
 
 }

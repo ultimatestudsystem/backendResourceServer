@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@RestController()
+@RestController
 public class FirebaseController {
 
     @Value("${secret.admin}")

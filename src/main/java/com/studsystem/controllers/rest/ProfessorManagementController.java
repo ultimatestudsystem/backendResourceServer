@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@RestController()
+@RestController
 public class ProfessorManagementController {
 
     @Autowired

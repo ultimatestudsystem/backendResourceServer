@@ -33,6 +33,9 @@ public class FirebaseController {
     @GetMapping("/storage/test")
     public ResponseEntity getUIDTest(@RequestParam String idToken) throws FirebaseAuthException {
         FirebaseToken firebaseToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
+        if (idToken == null) {
+            return ResponseEntity.badRequest().body("Cannot process the idToken parameter.");
+        }
         return ResponseEntity.ok().body(firebaseToken.getUid());
     }
 

@@ -1,16 +1,21 @@
 spring:
   profiles:
-    active: local
+    active: prod
     freemarker:
       template-loader-path: classpath:/templates
       suffix: .ftl
 
 storage:
   path: F:/All_files/books/6th semester/projects/UltimateStudSystem/storage
+
 secret:
   admin: U84Ffq19fZ
   student: KsSEcsJRyJ
   teacher: U5z3H1wteP
+
 admin:
   email: admin@ultimatestudsystem.com
   password: admin-pass
+
+server:
+  port: ${PORT:5000}

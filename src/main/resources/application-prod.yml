@@ -1,2 +1,14 @@
 storage:
   path: storage
+
+secret:
+  admin: U84Ffq19fZ
+  student: KsSEcsJRyJ
+  teacher: U5z3H1wteP
+
+admin:
+  email: admin@ultimatestudsystem.com
+  password: admin-pass
+
+server:
+  port: ${PORT:5000}

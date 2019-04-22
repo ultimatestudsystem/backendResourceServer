@@ -1,5 +1,6 @@
 storage:
   path: F:/All_files/books/6th semester/projects/UltimateStudSystem/storage
+
 secret:
   admin: U84Ffq19fZ
   student: KsSEcsJRyJ
@@ -8,3 +9,5 @@ admin:
   email: admin@ultimatestudsystem.com
   password: admin-pass
 
+server:
+  port: ${PORT:5000}

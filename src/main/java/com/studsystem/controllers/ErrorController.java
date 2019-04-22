@@ -13,7 +13,7 @@ public class ErrorController implements org.springframework.boot.autoconfigure.w
 
     @RequestMapping("/error")
     public String handleError(Model model, HttpServletRequest request) {
-        
+
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
         if (status != null) {
 

@@ -54,8 +54,4 @@ public class AdminManagementController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/")
-    public ResponseEntity index() {
-        return ResponseEntity.notFound().build();
-    }
 }

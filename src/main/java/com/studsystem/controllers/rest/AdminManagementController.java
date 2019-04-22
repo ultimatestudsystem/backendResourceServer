@@ -6,7 +6,11 @@ import com.studsystem.interfaces.FirebaseUserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class AdminManagementController {
@@ -54,5 +58,4 @@ public class AdminManagementController {
     public ResponseEntity index() {
         return ResponseEntity.notFound().build();
     }
-
 }

@@ -27,6 +27,5 @@ hs_err_pid*
 .idea/
 target/
 UltimateStudSystem.iml
-firebase-config.json
 storage/
 application-local.yml

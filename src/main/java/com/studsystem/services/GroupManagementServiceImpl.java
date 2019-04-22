@@ -1,58 +1,39 @@
 package com.studsystem.services;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.studsystem.dto.StudyGroup;
 import com.studsystem.dto.UserProfile;
 import com.studsystem.interfaces.GroupManagementService;
+import com.studsystem.interfaces.repository.StudyGroupFirebaseRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class GroupManagementServiceImpl implements GroupManagementService {
 
+    @Autowired
+    private StudyGroupFirebaseRepository studyGroupFirebaseRepository;
+
     @Override
     public boolean createGroup(StudyGroup group) {
-        DatabaseReference studyGroupReference = FirebaseDatabase.getInstance().getReference("groups");
-        DatabaseReference newGroupReference = studyGroupReference.push();
-        AtomicBoolean result = new AtomicBoolean(true);
-        newGroupReference.child("group_identifier").setValue(group.getGroupIdentifier(), (error, ref) -> result.set(error != null));
-        return result.get();
+        try {
+            return studyGroupFirebaseRepository.save(group);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
     public List<StudyGroup> getAllGroups() {
-//        CountDownLatch cdl = new CountDownLatch(1);
-//        ArrayList<StudyGroup> result = new ArrayList<>();
-//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("groups");
-//        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                dataSnapshot.getChildren().forEach(data -> {
-//                    String key = data.getKey();
-//                    if (data.hasChild("name") ){
-//                        Object name = data.child("name").getValue();
-//                        System.out.println(name.toString());
-//                        result.add(new StudyGroup(name.toString(), key));
-//                    }
-//                    System.out.println(key);
-//                });
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                System.out.println(databaseError.toString());
-//            }
-//        });
-//        try {
-//            cdl.await();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        return result;
-        throw new RuntimeException("Not yet implemented");
+        try {
+            return studyGroupFirebaseRepository.getObjectsAccordingToPredicate("groups", (e) -> true);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 
     @Override

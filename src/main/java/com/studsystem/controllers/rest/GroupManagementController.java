@@ -1,18 +1,18 @@
 package com.studsystem.controllers.rest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.studsystem.dto.StudyGroup;
+import com.studsystem.dto.UserProfile;
 import com.studsystem.interfaces.GroupManagementService;
 import com.studsystem.interfaces.HelperService;
+import com.studsystem.lambda.OnValidationFailure;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
 public class GroupManagementController {
@@ -25,46 +25,35 @@ public class GroupManagementController {
 
     @PutMapping("/groups/create-group")
     public ResponseEntity createGroup(@RequestParam String groupName) {
-//        StudyGroup sg = new StudyGroup();
-//        sg.setGroupIdentifier(groupName);
-//        if (groupManagementService.createGroup(sg)) {
-//            return ResponseEntity.ok().build();
-//        } else {
-//            return ResponseEntity.badRequest().body("The group is not unique or async operations" +
-//                    "was interrupted.");
-//        }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not yet implemented");
-    }
-
-    @GetMapping("/groups/get-all-groups")
-    public ResponseEntity getAllGroups () {
-        List<StudyGroup> allGroups = groupManagementService.getAllGroups();
-        String serializedResult;
-        try {
-            serializedResult = helperService.getObjectMapper().writeValueAsString(allGroups);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Cannot serialize the list of groups.");
+        AtomicReference<String> groupValidationMessage = new AtomicReference<>();
+        StudyGroup sg = StudyGroup.getInstance()
+            .setGroupIdentifier(groupName, (dto) -> {},
+                    (dto, message) -> groupValidationMessage.set(message));
+        if (!groupValidationMessage.get().isEmpty()) {
+            return ResponseEntity.badRequest().body(groupValidationMessage.get());
         }
-        if (serializedResult == null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Serialized object is null");
+        if (groupManagementService.createGroup(sg)) {
+            return ResponseEntity.ok().body(sg);
+        } else {
+            return ResponseEntity.badRequest().body("The group is not unique or async operations" +
+                    "was interrupted.");
         }
-        return ResponseEntity.ok().body(serializedResult);
     }
 
     @PutMapping("/groups/add-to-group")
     public ResponseEntity addToGroup(@RequestParam String userId,
                                      @RequestParam String groupId) {
-//        UserProfile up = new UserProfile();
-//        up.setKey(userId);
-//        StudyGroup sg = new StudyGroup();
-//        sg.setKey(groupId);
-//        if (groupManagementService.addToGroup(up, sg)) {
-//            return ResponseEntity.ok().build();
-//        } else {
-//            return ResponseEntity.badRequest().body("Either async operations was interrupted or not valid email or" +
-//                    "group identifier.");
-//        }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not yet implemented");
+        StringBuilder validationMessages = new StringBuilder();
+        OnValidationFailure failureCallback = (dto, message) -> validationMessages.append(message.concat(" "));
+        UserProfile up = UserProfile.getInstance().setKey(userId, null, failureCallback);
+        StudyGroup sg = StudyGroup.getInstance().setKey(groupId, null, failureCallback);
+        if (!validationMessages.toString().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(validationMessages.toString());
+        }
+        if (groupManagementService.addToGroup(up, sg)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Cannot add student with userID-" + userId + " to group with groupID-" + groupId);
+        }
     }
 }

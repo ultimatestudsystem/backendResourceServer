@@ -1,7 +1,5 @@
 package com.studsystem.interfaces.validation;
 
-import com.studsystem.interfaces.ValidationService;
-
 public interface SolutionValidationService extends ValidationService {
 
     String isSolutionKeyValid(String solutionKey, String courseKey, String userKey, String taskKey);

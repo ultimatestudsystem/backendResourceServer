@@ -1,7 +1,7 @@
 package com.studsystem.dto;
 
 import com.studsystem.helper.DTO;
-import com.studsystem.helper.DTOValidation;
+import com.studsystem.helper.DTOUtilities;
 import com.studsystem.lambda.OnValidationFailure;
 import com.studsystem.lambda.OnValidationSuccess;
 import com.studsystem.interfaces.validation.TaskValidationService;
@@ -25,7 +25,7 @@ public class Task extends DTO {
     private TaskValidationService taskValidationService;
 
     private Task() {
-        taskValidationService = DTOValidation.getValidationServiceOf(TaskValidationService.class);
+        taskValidationService = DTOUtilities.getValidationServiceOf(TaskValidationService.class);
     }
 
     public String getKey() {

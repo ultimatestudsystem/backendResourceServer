@@ -1,7 +1,7 @@
 package com.studsystem.dto;
 
 import com.studsystem.helper.DTO;
-import com.studsystem.helper.DTOValidation;
+import com.studsystem.helper.DTOUtilities;
 import com.studsystem.lambda.OnValidationFailure;
 import com.studsystem.lambda.OnValidationSuccess;
 import com.studsystem.interfaces.validation.StudyGroupValidationService;
@@ -18,7 +18,7 @@ public class StudyGroup extends DTO {
     private StudyGroupValidationService studyGroupValidationService;
 
     private StudyGroup() {
-        studyGroupValidationService = DTOValidation.getValidationServiceOf(StudyGroupValidationService.class);
+        studyGroupValidationService = DTOUtilities.getValidationServiceOf(StudyGroupValidationService.class);
     }
 
     public String getKey() {

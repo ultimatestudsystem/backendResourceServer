@@ -1,7 +1,7 @@
 package com.studsystem.dto;
 
 import com.studsystem.helper.DTO;
-import com.studsystem.helper.DTOValidation;
+import com.studsystem.helper.DTOUtilities;
 import com.studsystem.lambda.OnValidationFailure;
 import com.studsystem.lambda.OnValidationSuccess;
 import com.studsystem.interfaces.validation.MessagesValidationService;
@@ -19,7 +19,7 @@ public class Message extends DTO {
     private MessagesValidationService messagesValidationService;
 
     private Message() {
-        messagesValidationService = DTOValidation.getValidationServiceOf(MessagesValidationService.class);
+        messagesValidationService = DTOUtilities.getValidationServiceOf(MessagesValidationService.class);
     }
 
     public String getKey() {

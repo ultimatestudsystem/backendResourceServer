@@ -20,7 +20,7 @@ public class AdminManagementController {
     @PutMapping("/admin/create-user")
     public ResponseEntity createUser(@RequestParam String email,
                                      @RequestParam String password,
-                                     @RequestParam String type,
+                                     @RequestParam String userType,
                                      @RequestParam String birthDate,
                                      @RequestParam String firstName,
                                      @RequestParam String lastName,
@@ -28,8 +28,11 @@ public class AdminManagementController {
                                      @RequestParam String phone,
                                      @RequestParam String photo) {
         try {
-            firebaseUserService.createUser(email, password, type, birthDate, firstName,
+            String validationMessage = firebaseUserService.createUser(email, password, userType, birthDate, firstName,
                     lastName, middleName, phone, photo);
+            if (!validationMessage.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(validationMessage);
+            }
         } catch (FirebaseAuthException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Auth Exception occurred");

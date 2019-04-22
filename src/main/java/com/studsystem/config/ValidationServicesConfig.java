@@ -1,8 +1,8 @@
 package com.studsystem.config;
 
-import com.studsystem.interfaces.ValidationService;
+import com.studsystem.interfaces.validation.ValidationService;
 import com.studsystem.interfaces.validation.*;
-import com.studsystem.services.ValidationServiceImpl;
+import com.studsystem.services.validation.ValidationServiceImpl;
 import com.studsystem.services.validation.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

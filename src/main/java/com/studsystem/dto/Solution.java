@@ -2,7 +2,7 @@ package com.studsystem.dto;
 
 import com.studsystem.enums.SolutionState;
 import com.studsystem.helper.DTO;
-import com.studsystem.helper.DTOValidation;
+import com.studsystem.helper.DTOUtilities;
 import com.studsystem.lambda.OnValidationFailure;
 import com.studsystem.lambda.OnValidationSuccess;
 import com.studsystem.interfaces.validation.SolutionValidationService;
@@ -27,7 +27,7 @@ public class Solution extends DTO {
     private SolutionValidationService solutionValidationService;
 
     private Solution() {
-        solutionValidationService = DTOValidation.getValidationServiceOf(SolutionValidationService.class);
+        solutionValidationService = DTOUtilities.getValidationServiceOf(SolutionValidationService.class);
     }
 
     public String getKey() {

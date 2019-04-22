@@ -2,7 +2,7 @@ package com.studsystem.helper;
 
 import com.studsystem.lambda.OnValidationFailure;
 import com.studsystem.lambda.OnValidationSuccess;
-import com.studsystem.interfaces.ValidationService;
+import com.studsystem.interfaces.validation.ValidationService;
 
 public class DTO {
 

@@ -1,8 +1,11 @@
 package com.studsystem.repository;
 
+import com.google.firebase.database.DataSnapshot;
 import com.studsystem.dto.StudentProfile;
 import com.studsystem.interfaces.repository.StudentProfileFirebaseRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public class StudentProfileFirebaseRepositoryImpl implements StudentProfileFirebaseRepository {
@@ -12,7 +15,7 @@ public class StudentProfileFirebaseRepositoryImpl implements StudentProfileFireb
     }
 
     @Override
-    public StudentProfile get(String key) {
+    public Optional<StudentProfile> get(String key) {
         throw new RuntimeException("Not implemented yet");
     }
 
@@ -20,4 +23,10 @@ public class StudentProfileFirebaseRepositoryImpl implements StudentProfileFireb
     public boolean delete(String key) {
         throw new RuntimeException("Not implemented yet");
     }
+
+    @Override
+    public Optional<StudentProfile> mapFromDataSnapshot(DataSnapshot dataSnapshot) {
+        throw new RuntimeException("Not implemented yet");
+    }
+
 }

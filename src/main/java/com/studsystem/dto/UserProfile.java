@@ -1,7 +1,7 @@
 package com.studsystem.dto;
 
 import com.studsystem.helper.DTO;
-import com.studsystem.helper.DTOValidation;
+import com.studsystem.helper.DTOUtilities;
 import com.studsystem.lambda.OnValidationFailure;
 import com.studsystem.lambda.OnValidationSuccess;
 import com.studsystem.interfaces.validation.ProfileValidationService;
@@ -25,7 +25,7 @@ public class UserProfile extends DTO {
     protected ProfileValidationService profileValidationService;
 
     protected UserProfile() {
-        profileValidationService = DTOValidation.getValidationServiceOf(ProfileValidationService.class);
+        profileValidationService = DTOUtilities.getValidationServiceOf(ProfileValidationService.class);
     }
 
     public String getKey() {

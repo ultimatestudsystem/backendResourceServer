@@ -4,21 +4,15 @@ import com.studsystem.dto.*;
 import com.studsystem.enums.SolutionState;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProfessorsManagementService {
-
-    boolean addTaskToCourse(ProfessorProfile professorProfile, Task task);
-
+    boolean addTaskToCourse(Task task) throws InterruptedException;
     List<Task> getTasksOfCourse(Course course);
     List<StudentProfile> getStudentsOfCourse(Course course);
-    List<Solution> getSolutionsOfTask(Course course, Task task);
-
-    ProfessorProfile getProfessorProfileOfCourse(Course course);
-
-    ProfessorProfile getProfessorProfile(String userKey);
-
-    boolean setSolutionStatusOfStudentInCourseOfTask(Course course, StudentProfile studentProfile, Task task,
-                                                     Solution solution, SolutionState state);
-    SolutionState getSolutionStatusOfStudentInCourseOfTask(Course course, StudentProfile studentProfile, Task task,
-                                                           Solution solution);
+    List<Solution> getSolutionsOfTask(Task task);
+    Optional<ProfessorProfile> getProfessorProfileOfCourse(Course course);
+    Optional<ProfessorProfile> getProfessorProfile(String userKey);
+    boolean setSolutionStatus(Solution solution, SolutionState state);
+    Optional<SolutionState> getSolutionStatus(Solution solution);
 }

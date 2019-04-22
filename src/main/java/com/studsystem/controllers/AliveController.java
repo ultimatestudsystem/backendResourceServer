@@ -5,9 +5,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class DowloadUploadWithViewController {
+public class AliveController {
 
-    @GetMapping("/upload")
+    @GetMapping("/")
     public String getUploadView(Model model) {
         model.addAttribute("message", "Welcome aboard!");
         return "index";

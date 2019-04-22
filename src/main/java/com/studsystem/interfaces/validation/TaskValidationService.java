@@ -1,7 +1,5 @@
 package com.studsystem.interfaces.validation;
 
-import com.studsystem.interfaces.ValidationService;
-
 public interface TaskValidationService extends ValidationService {
 
     String isExpirationDateValid(String expirationDate, String uploadingDate);

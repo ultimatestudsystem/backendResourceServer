@@ -1,7 +1,5 @@
 package com.studsystem.interfaces.validation;
 
-import com.studsystem.interfaces.ValidationService;
-
 public interface ProfileValidationService extends ValidationService {
     String isEmailValid(String email);
     String isBirthDateValid(String birthDate);

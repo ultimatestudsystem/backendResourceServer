@@ -15,3 +15,15 @@ server:
   error:
     whitelabel:
       enabled: false
+
+logging:
+  level:
+    root: WARN
+    org:
+      springframework:
+        security: DEBUG
+        web: ERROR
+      hibernate: DEBUG
+      apache:
+        commons:
+          dbcp2: DEBUG

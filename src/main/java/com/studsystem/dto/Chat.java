@@ -1,10 +1,10 @@
 package com.studsystem.dto;
 
 import com.studsystem.helper.DTO;
-import com.studsystem.helper.DTOValidation;
+import com.studsystem.helper.DTOUtilities;
 import com.studsystem.lambda.OnValidationFailure;
 import com.studsystem.lambda.OnValidationSuccess;
-import com.studsystem.interfaces.ValidationService;
+import com.studsystem.interfaces.validation.ValidationService;
 
 public class Chat extends DTO {
 
@@ -19,7 +19,7 @@ public class Chat extends DTO {
     private ValidationService validationService;
 
     private Chat() {
-        validationService = DTOValidation.getValidationServiceOf(ValidationService.class);
+        validationService = DTOUtilities.getValidationServiceOf(ValidationService.class);
     }
 
     public String getKey() {

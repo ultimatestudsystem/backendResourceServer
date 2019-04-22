@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class FirebaseUserProfileServiceImpl implements FirebaseUserProfileService {
@@ -69,8 +70,12 @@ public class FirebaseUserProfileServiceImpl implements FirebaseUserProfileServic
                 .setPhoto(photo, successCallback, failureCallback);
 
         boolean answerIsEmpty = answer.toString().isEmpty();
-        if (answerIsEmpty && !userProfileFirebaseRepository.save(newUserProfile)) {
-            answer.append("could not save new user profile");
+        try {
+            if (answerIsEmpty && !userProfileFirebaseRepository.save(newUserProfile)) {
+                answer.append("could not save new user profile");
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         return answerIsEmpty ? "OK" : answer.toString();
     }
@@ -85,7 +90,7 @@ public class FirebaseUserProfileServiceImpl implements FirebaseUserProfileServic
     }
 
     @Override
-    public UserProfile getUserByKey(String key) {
+    public Optional<UserProfile> getUserByKey(String key) {
         return userProfileFirebaseRepository.get(key);
     }
 }

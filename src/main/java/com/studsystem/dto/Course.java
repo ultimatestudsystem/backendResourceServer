@@ -1,7 +1,7 @@
 package com.studsystem.dto;
 
 import com.studsystem.helper.DTO;
-import com.studsystem.helper.DTOValidation;
+import com.studsystem.helper.DTOUtilities;
 import com.studsystem.lambda.OnValidationFailure;
 import com.studsystem.lambda.OnValidationSuccess;
 import com.studsystem.interfaces.validation.CourseValidationService;
@@ -23,7 +23,7 @@ public class Course extends DTO {
     private CourseValidationService courseValidationService;
 
     private Course() {
-        courseValidationService = DTOValidation.getValidationServiceOf(CourseValidationService.class);
+        courseValidationService = DTOUtilities.getValidationServiceOf(CourseValidationService.class);
     }
 
     public String getKey() {

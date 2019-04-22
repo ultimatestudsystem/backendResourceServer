@@ -14,6 +14,11 @@
       <#else>
         <h2>Unknown error :(</h2>
       </#if>
+      <#if statusCode??>
+        <h3>Status code: ${statusCode}/h3>
+      <#else>
+        <h3>Status code: Missing/h3>
+      </#if>
    </body>
 
 </html>

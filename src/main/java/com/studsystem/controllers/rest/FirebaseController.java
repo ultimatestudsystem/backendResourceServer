@@ -47,8 +47,7 @@ public class FirebaseController {
 
     @PostMapping("/storage/solution/upload")
     public ResponseEntity uploadSolution(@RequestParam MultipartFile file, @RequestParam String courseId,
-                                         @RequestParam String taskId, @RequestParam String idToken
-            /*ПОЛУЧИТЬ АЙДИ ЮЗЕРА ЗДЕСЯ*/,
+                                         @RequestParam String taskId, @RequestParam String idToken/*ПОЛУЧИТЬ АЙДИ ЮЗЕРА ЗДЕСЯ*/,
                                          @RequestParam String commentary) {
         return ResponseEntity.ok().build();
     }

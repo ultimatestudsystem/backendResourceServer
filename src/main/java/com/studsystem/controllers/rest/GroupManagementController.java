@@ -20,9 +20,6 @@ public class GroupManagementController {
     @Autowired
     private GroupManagementService groupManagementService;
 
-    @Autowired
-    private HelperService helperService;
-
     @PutMapping("/groups/create-group")
     public ResponseEntity createGroup(@RequestParam String groupName) {
         AtomicReference<String> groupValidationMessage = new AtomicReference<>();

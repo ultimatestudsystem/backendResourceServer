@@ -1,9 +1,6 @@
 package com.studsystem.services;
 
-import com.studsystem.dto.Course;
-import com.studsystem.dto.Solution;
-import com.studsystem.dto.StudentProfile;
-import com.studsystem.dto.Task;
+import com.studsystem.dto.*;
 import com.studsystem.interfaces.StudentsManagementService;
 import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
 import org.springframework.stereotype.Service;
@@ -31,6 +28,11 @@ public class StudentsManagementServiceImpl implements StudentsManagementService 
 
     @Override
     public Optional<StudentProfile> getStudentProfile(String userId) {
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    @Override
+    public boolean addStudentProfileToUserProfile(UserProfile up, StudentProfile sp) {
         throw new RuntimeException("Not yet implemented");
     }
 }

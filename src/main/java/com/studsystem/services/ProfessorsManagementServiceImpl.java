@@ -59,4 +59,9 @@ public class ProfessorsManagementServiceImpl implements ProfessorsManagementServ
     public Optional<SolutionState> getSolutionStatus(Solution solution) {
         throw new RuntimeException("Not yet implemented");
     }
+
+    @Override
+    public boolean addProfessorProfileToUserProfile(UserProfile up, ProfessorProfile pp) {
+        throw new RuntimeException("Not yet implemented");
+    }
 }

@@ -15,4 +15,5 @@ public interface ProfessorsManagementService {
     Optional<ProfessorProfile> getProfessorProfile(String userKey);
     boolean setSolutionStatus(Solution solution, SolutionState state);
     Optional<SolutionState> getSolutionStatus(Solution solution);
+    boolean addProfessorProfileToUserProfile(UserProfile up, ProfessorProfile pp);
 }

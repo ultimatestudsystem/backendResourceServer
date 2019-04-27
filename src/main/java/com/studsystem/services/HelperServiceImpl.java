@@ -1,4 +1,4 @@
-package com.studsystem.helper;
+package com.studsystem.services;
 
 import com.studsystem.interfaces.HelperService;
 import org.springframework.stereotype.Service;

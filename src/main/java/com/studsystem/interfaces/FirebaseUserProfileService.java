@@ -18,4 +18,5 @@ public interface FirebaseUserProfileService {
     String deleteUser(String id);
 
     Optional<UserProfile> getUserByKey(String key);
+    Optional<UserProfile> getUserByFirebaseKey(String firebaseKey);
 }

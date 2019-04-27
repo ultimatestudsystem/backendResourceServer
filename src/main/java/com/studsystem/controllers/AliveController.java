@@ -9,7 +9,7 @@ public class AliveController {
 
     @GetMapping("/")
     public String getUploadView(Model model) {
-        model.addAttribute("message", "Welcome aboard!");
+        model.addAttribute("message", "The application is alive!");
         return "index";
     }
 

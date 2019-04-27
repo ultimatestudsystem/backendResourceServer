@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -92,5 +93,21 @@ public class FirebaseUserProfileServiceImpl implements FirebaseUserProfileServic
     @Override
     public Optional<UserProfile> getUserByKey(String key) {
         return userProfileFirebaseRepository.get(key);
+    }
+
+    @Override
+    public Optional<UserProfile> getUserByFirebaseKey(String firebaseKey) {
+        List<UserProfile> userProfilesList;
+        try {
+            userProfilesList = userProfileFirebaseRepository.getObjectsAccordingToPredicate("users",
+                    (userProfile) -> userProfile.getFirebaseUserId().equals(firebaseKey));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
+        if (userProfilesList.size() > 1) {
+            throw new RuntimeException(String.format("There is more than one user profile with id token %s", firebaseKey));
+        }
+        return Optional.ofNullable(userProfilesList.get(0));
     }
 }

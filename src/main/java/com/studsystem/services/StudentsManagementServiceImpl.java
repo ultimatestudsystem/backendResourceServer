@@ -1,5 +1,7 @@
 package com.studsystem.services;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.studsystem.dto.*;
 import com.studsystem.interfaces.StudentsManagementService;
 import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
@@ -10,29 +12,13 @@ import java.util.Optional;
 
 @Service
 public class StudentsManagementServiceImpl implements StudentsManagementService {
-
-    @Override
-    public boolean addSolutionToTask(StudentProfile studentProfile, Solution solution, Task task) {
-        throw new RuntimeException("Not yet implemented");
-    }
-
-    @Override
-    public Optional<Solution> getSolutionFromTask(StudentProfile studentProfile, Task task) {
-        throw new RuntimeException("Not yet implemented");
-    }
-
-    @Override
-    public List<Task> getTasksOfCourse(StudentProfile studentProfile, Course course) {
-        throw new RuntimeException("Not yet implemented");
-    }
-
-    @Override
-    public Optional<StudentProfile> getStudentProfile(String userId) {
-        throw new RuntimeException("Not yet implemented");
-    }
-
     @Override
     public boolean addStudentProfileToUserProfile(UserProfile up, StudentProfile sp) {
-        throw new RuntimeException("Not yet implemented");
+        DatabaseReference newStudentProfileReference = FirebaseDatabase.getInstance().getReference("students")
+                .child(up.getKey());
+        newStudentProfileReference.child("additional_info").setValueAsync(sp.getAdditionalInfo());
+        newStudentProfileReference.child("average_score").setValueAsync(sp.getAverageScore());
+        newStudentProfileReference.child("group_id").setValueAsync(sp.getGroupKey());
+        return true;
     }
 }

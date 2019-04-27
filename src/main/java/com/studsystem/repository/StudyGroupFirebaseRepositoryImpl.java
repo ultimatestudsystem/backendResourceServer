@@ -7,34 +7,44 @@ import com.studsystem.dto.StudyGroup;
 import com.studsystem.interfaces.repository.StudyGroupFirebaseRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Repository
 public class StudyGroupFirebaseRepositoryImpl implements StudyGroupFirebaseRepository {
+
     @Override
     public boolean save(StudyGroup group) {
-//        DatabaseReference studyGroupReference = FirebaseDatabase.getInstance().getReference("groups");
-//        DatabaseReference newGroupReference = studyGroupReference.push();
-//        AtomicBoolean result = new AtomicBoolean(true);
-//        newGroupReference.child("group_identifier").setValue(group.getGroupIdentifier(), (error, ref) -> result.set(error != null));
-//        return result.get();
-        return false;
+        DatabaseReference studyGroupReference = FirebaseDatabase.getInstance().getReference("groups");
+        for (String studentKey : group.getStudentKeys()) {
+            studyGroupReference.child(group.getKey()).child(studentKey).setValueAsync(0);
+        }
+        return true;
     }
 
     @Override
     public Optional<StudyGroup> get(String key) {
-        throw new RuntimeException("Not implemented yet");
+        try {
+            return isObjectWithPredicateExists("study_groups", studyGroup -> studyGroup.getKey().equals(key));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
     }
 
     @Override
     public boolean delete(String key) {
-        throw new RuntimeException("Not implemented yet");
+        FirebaseDatabase.getInstance().getReference("study_groups").child(key).setValueAsync(null);
+        return true;
     }
 
     @Override
     public Optional<StudyGroup> mapFromDataSnapshot(DataSnapshot dataSnapshot) {
-        throw new RuntimeException("Not implemented yet");
+        StudyGroup result = StudyGroup.getInstance()
+                .setKey(dataSnapshot.getKey(), null, null)
+                .setStudentKeys(new ArrayList<>(), null, null);
+        dataSnapshot.getChildren().forEach(data -> result.getStudentKeys().add(data.getKey()));
+        return Optional.of(result);
     }
 
 }

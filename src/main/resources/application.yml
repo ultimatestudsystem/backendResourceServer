@@ -6,7 +6,7 @@ spring:
       suffix: .ftl
 
 storage:
-  path: F:/All_files/books/6th semester/projects/UltimateStudSystem/storage
+  path: storage
 
 secret:
   admin: U84Ffq19fZ

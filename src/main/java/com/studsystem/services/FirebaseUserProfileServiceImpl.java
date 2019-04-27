@@ -21,27 +21,13 @@ import java.util.Optional;
 @Service
 public class FirebaseUserProfileServiceImpl implements FirebaseUserProfileService {
 
-//    @Value("${secret.student}")
-//    private String secretStudent;
-//
-//    @Value("${secret.teacher}")
-//    private String secretTeacher;
-//
-//    private Map<String, String> secrets;
-
     @Autowired
     private UserProfileFirebaseRepository userProfileFirebaseRepository;
 
-//    public FirebaseUserProfileServiceImpl() {
-//        secrets = new HashMap<>();
-//        secrets.put(UserType.STUDENT.name().toLowerCase(),  secretStudent);
-//        secrets.put(UserType.TEACHER.name().toLowerCase(),  secretTeacher);
-//    }
 
     @Override
     public String createUser(String email, String password, String role, String birthDate, String firstName,
                            String lastName, String middleName, String phone, String photo) throws FirebaseAuthException {
-//        return createUser(email, password, type, birthDate, firstName, lastName, middleName, phone, photo, secrets.get(type));
         StringBuilder answer = new StringBuilder();
         role = role.toLowerCase();
         UserRecord.CreateRequest request = new UserRecord.CreateRequest();

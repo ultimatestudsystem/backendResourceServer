@@ -1,5 +1,7 @@
 package com.studsystem.services;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.studsystem.dto.StudyGroup;
 import com.studsystem.dto.UserProfile;
 import com.studsystem.interfaces.GroupManagementService;
@@ -8,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class GroupManagementServiceImpl implements GroupManagementService {
@@ -38,6 +42,20 @@ public class GroupManagementServiceImpl implements GroupManagementService {
 
     @Override
     public boolean addToGroup(UserProfile userProfile, StudyGroup studyGroup) {
+        try {
+            if (studyGroupFirebaseRepository.isObjectWithPredicateExists("study_groups",
+                    (group) -> group.getStudentKeys().contains(userProfile.getKey())).isPresent()) {
+                return false;
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        DatabaseReference studyGroupReference = FirebaseDatabase.getInstance().getReference("study_groups");
+        Map<String, Integer> userValues = new HashMap<>();
+        userValues.put(userProfile.getKey(), 0);
+        studyGroupReference.setValueAsync(userValues);
 
 //        DatabaseReference studentsReference = FirebaseDatabase.getInstance().getReference("students");
 //        DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("users");

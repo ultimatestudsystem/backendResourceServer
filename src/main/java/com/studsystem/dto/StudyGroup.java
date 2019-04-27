@@ -6,13 +6,15 @@ import com.studsystem.lambda.OnValidationFailure;
 import com.studsystem.lambda.OnValidationSuccess;
 import com.studsystem.interfaces.validation.StudyGroupValidationService;
 
+import java.util.List;
+
 public class StudyGroup extends DTO {
 
     public static StudyGroup getInstance() {
         return new StudyGroup();
     }
 
-    private String groupIdentifier;
+    private List<String> studentKeys;
     private String key;
 
     private StudyGroupValidationService studyGroupValidationService;
@@ -24,10 +26,10 @@ public class StudyGroup extends DTO {
     public String getKey() {
         return key;
     }
-
-    public String getGroupIdentifier() {
-        return groupIdentifier;
+    public List<String> getStudentKeys() {
+        return studentKeys;
     }
+
 
     public StudyGroup setKey(String key, OnValidationSuccess lambdaSuccess, OnValidationFailure lambdaFailure) {
         this.key = key;
@@ -35,9 +37,11 @@ public class StudyGroup extends DTO {
         return this;
     }
 
-    public StudyGroup setGroupIdentifier(String groupIdentifier, OnValidationSuccess lambdaSuccess, OnValidationFailure lambdaFailure) {
-        this.groupIdentifier = groupIdentifier;
-        onValid(studyGroupValidationService.isGroupIdentifierValid(getGroupIdentifier()), lambdaSuccess, lambdaFailure);
+    public StudyGroup setStudentKeys(List<String> studentKeys, OnValidationSuccess lambdaSuccess, OnValidationFailure lambdaFailure) {
+        this.studentKeys = studentKeys;
+        onValid(studyGroupValidationService.isStudentKeysValid(getStudentKeys()), lambdaSuccess, lambdaFailure);
         return this;
     }
+
+
 }

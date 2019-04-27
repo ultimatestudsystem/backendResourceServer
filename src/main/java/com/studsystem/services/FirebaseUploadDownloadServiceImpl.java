@@ -1,14 +1,25 @@
 package com.studsystem.services;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.studsystem.dto.Solution;
 import com.studsystem.dto.Task;
 import com.studsystem.interfaces.FirebaseUploadDownloadService;
+import com.studsystem.interfaces.repository.SolutionFirebaseRepository;
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.crypto.Data;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class FirebaseUploadDownloadServiceImpl implements FirebaseUploadDownloadService {
@@ -18,11 +29,36 @@ public class FirebaseUploadDownloadServiceImpl implements FirebaseUploadDownload
 
     @Override
     public boolean uploadTaskFile(MultipartFile content, Task task) throws IOException {
+        Path path = Paths.get(storagePath, "tasks");
+        File folder = path.toFile();
+        if (folder.exists() || folder.mkdirs()) {
+            String extension = FilenameUtils.getExtension(content.getOriginalFilename());
+            String key = task.getCourseKey() + "-" + task.getKey();
+            File file = new File(folder, key + "." + extension);
+            content.transferTo(file);
+            return true;
+        }
         return false;
     }
 
     @Override
-    public boolean uploadSolutionFile(MultipartFile file, Solution solution) throws IOException {
+    public boolean uploadSolutionFile(MultipartFile content, Solution solution) throws IOException {
+        Path path = Paths.get(storagePath, "solutions");
+        File folder = path.toFile();
+        if (folder.exists() || folder.mkdirs()) {
+            String extension = FilenameUtils.getExtension(content.getOriginalFilename());
+            String key = solution.getCourseKey() + "-" + solution.getUserKey()
+                    + "-" + solution.getTaskKey() + "-" + solution.getKey();
+            File file = new File(folder, key + "." + extension);
+            content.transferTo(file);
+            DatabaseReference thisSolution = FirebaseDatabase.getInstance()
+                    .getReference(String.format("solutions/%s/%s/%s/%s", solution.getCourseKey(),
+                            solution.getUserKey(), solution.getTaskKey(), solution.getKey()));
+            Map<String, String> linkValue = new HashMap<>();
+            linkValue.put("solution_file_link", file.getAbsolutePath());
+            thisSolution.setValueAsync(linkValue);
+            return true;
+        }
         return false;
     }
 

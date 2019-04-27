@@ -66,7 +66,8 @@ public class StorageManagementController {
         }
         StringBuilder validationMessages = new StringBuilder();
         OnValidationFailure failureCallback = (dto, message) -> validationMessages.append(message.concat(" "));
-        Task task = Task.getInstance().setCourseKey(courseId, null, failureCallback)
+        Task task = Task.getInstance()
+                .setCourseKey(courseId, null, failureCallback)
                 .setKey(taskId, null, failureCallback);
         if (idToken == null) {
             return ResponseEntity.badRequest().body("Cannot process the idToken parameter.");

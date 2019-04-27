@@ -1,5 +1,7 @@
 package com.studsystem.interfaces.validation;
 
+import java.util.List;
+
 public interface StudyGroupValidationService extends ValidationService {
-    String isGroupIdentifierValid(String studyGroupIdentifier);
+    String isStudentKeysValid(List<String> studentKeys);
 }

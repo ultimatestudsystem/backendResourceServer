@@ -138,4 +138,9 @@ public class Solution extends DTO {
         onValid(solutionValidationService.isUploadingDateValid(getUploadingDate(), getCheckingDate()), lambdaSuccess, lambdaFailure);
         return this;
     }
+
+    @Override
+    public String toString() {
+        return String.format("{Key:%s, CourseKey:%s, TaskKey:%s, UserKey:%s}", getKey(), getCourseKey(), getTaskKey(), getUserKey());
+    }
 }

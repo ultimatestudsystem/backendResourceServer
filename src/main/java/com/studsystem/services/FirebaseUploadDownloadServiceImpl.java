@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.crypto.Data;
 import java.io.File;
@@ -20,6 +21,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class FirebaseUploadDownloadServiceImpl implements FirebaseUploadDownloadService {
@@ -27,38 +30,61 @@ public class FirebaseUploadDownloadServiceImpl implements FirebaseUploadDownload
     @Value("${storage.path}")
     private String storagePath;
 
+    private static Logger l = Logger.getLogger(FirebaseUploadDownloadServiceImpl.class.getName());
+
     @Override
-    public boolean uploadTaskFile(MultipartFile content, Task task) throws IOException {
+    public boolean uploadTaskFile(MultipartFile content, Task task, HttpServletRequest request) throws IOException {
+        l.log(Level.ALL, "Uploading task with params: " + content.toString() + ", Task: " + task.toString());
         Path path = Paths.get(storagePath, "tasks");
         File folder = path.toFile();
+        l.log(Level.ALL, "Folder is: " + folder.getAbsolutePath());
         if (folder.exists() || folder.mkdirs()) {
+            l.log(Level.ALL, "Folder exists or created");
             String extension = FilenameUtils.getExtension(content.getOriginalFilename());
             String key = task.getCourseKey() + "-" + task.getKey();
             File file = new File(folder, key + "." + extension);
             content.transferTo(file);
+
+            DatabaseReference thisTask = FirebaseDatabase.getInstance().getReference("tasks/" +
+                    task.getCourseKey() + "/" + task.getKey());
+            Map<String, String> linkValue = new HashMap<>();
+            String fileLink = "https://" + request.getContextPath() + "/" + file.getAbsolutePath();
+            l.log(Level.ALL, "Prepared link: " + fileLink);
+            linkValue.put("task_file_link", fileLink);
+            thisTask.setValueAsync(linkValue);
             return true;
         }
+        l.log(Level.ALL, "Folder neither exists nor created");
         return false;
     }
 
     @Override
-    public boolean uploadSolutionFile(MultipartFile content, Solution solution) throws IOException {
+    public boolean uploadSolutionFile(MultipartFile content, Solution solution, HttpServletRequest request) throws IOException {
+        l.log(Level.ALL, "Uploading solution with params: " + content.toString() + ", Solution: " + solution.toString());
         Path path = Paths.get(storagePath, "solutions");
         File folder = path.toFile();
+        l.log(Level.ALL, "Folder is: " + folder.getAbsolutePath());
         if (folder.exists() || folder.mkdirs()) {
+            l.log(Level.ALL, "Folder exists or created");
             String extension = FilenameUtils.getExtension(content.getOriginalFilename());
             String key = solution.getCourseKey() + "-" + solution.getUserKey()
                     + "-" + solution.getTaskKey() + "-" + solution.getKey();
-            File file = new File(folder, key + "." + extension);
+            String fileName = key + "." + extension;
+            l.log(Level.ALL, "Filename is " + fileName);
+            File file = new File(folder, fileName);
             content.transferTo(file);
+
             DatabaseReference thisSolution = FirebaseDatabase.getInstance()
                     .getReference(String.format("solutions/%s/%s/%s/%s", solution.getCourseKey(),
                             solution.getUserKey(), solution.getTaskKey(), solution.getKey()));
             Map<String, String> linkValue = new HashMap<>();
-            linkValue.put("solution_file_link", file.getAbsolutePath());
+            String fileLink = "https://" + request.getContextPath() + "/" + file.getAbsolutePath();
+            l.log(Level.ALL, "Prepared link: " + fileLink);
+            linkValue.put("solution_file_link", fileLink);
             thisSolution.setValueAsync(linkValue);
             return true;
         }
+        l.log(Level.ALL, "Folder neither exists nor created");
         return false;
     }
 

@@ -117,4 +117,9 @@ public class Task extends DTO {
         onValid(taskValidationService.isUploadingDateValid(getUploadingDate()), lambdaSuccess, lambdaFailure);
         return this;
     }
+
+    @Override
+    public String toString() {
+        return String.format("{Key:%s, CourseKey:%s}", getKey(), getCourseKey());
+    }
 }

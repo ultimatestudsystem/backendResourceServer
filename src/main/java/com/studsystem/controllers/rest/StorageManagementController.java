@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
@@ -57,7 +58,7 @@ public class StorageManagementController {
 
     @PostMapping("/storage/task/upload")
     public ResponseEntity uploadTask(@RequestParam MultipartFile file, @RequestParam String courseId,
-                                 @RequestParam String taskId, @RequestParam String idToken) {
+                                     @RequestParam String taskId, @RequestParam String idToken, HttpServletRequest request) {
         try {
             FirebaseAuth.getInstance().verifyIdToken(idToken);
         } catch (FirebaseAuthException e) {
@@ -76,7 +77,7 @@ public class StorageManagementController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(validationMessages.toString());
         }
         try {
-            if (uploadDownloadService.uploadTaskFile(file, task)) {
+            if (uploadDownloadService.uploadTaskFile(file, task, request)) {
                 return ResponseEntity.ok().build();
             } else {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("The firebase interaction was interrupted!");
@@ -90,7 +91,7 @@ public class StorageManagementController {
     @PostMapping("/storage/solution/upload")
     public ResponseEntity uploadSolution(@RequestParam MultipartFile file, @RequestParam String courseId,
                                          @RequestParam String taskId, @RequestParam String idToken,
-                                         @RequestParam String commentary) {
+                                         @RequestParam String commentary, HttpServletRequest request) {
         FirebaseToken firebaseToken;
         try {
             firebaseToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
@@ -120,7 +121,7 @@ public class StorageManagementController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(validationMessages.toString());
         }
         try {
-            if (uploadDownloadService.uploadSolutionFile(file, solution)) {
+            if (uploadDownloadService.uploadSolutionFile(file, solution, request)) {
                 return ResponseEntity.ok().build();
             } else {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("The firebase interaction was interrupted!");

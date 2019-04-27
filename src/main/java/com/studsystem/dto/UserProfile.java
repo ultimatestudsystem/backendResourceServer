@@ -21,6 +21,7 @@ public class UserProfile extends DTO {
     private String phone;
     private String photo;
     private String firebaseUserId;
+    private String role;
 
     protected ProfileValidationService profileValidationService;
 
@@ -31,33 +32,29 @@ public class UserProfile extends DTO {
     public String getKey() {
         return key;
     }
-
     public String getEmail() {
         return email;
     }
-
     public String getBirthDate() {
         return birthDate;
     }
-
     public String getFirstName() {
         return firstName;
     }
-
     public String getLastName() {
         return lastName;
     }
-
     public String getMiddleName() {
         return middleName;
     }
-
     public String getPhone() {
         return phone;
     }
-
     public String getPhoto() {
         return photo;
+    }
+    public String getRole() {
+        return role;
     }
 
     public String getFirebaseUserId() {
@@ -114,6 +111,12 @@ public class UserProfile extends DTO {
 
     public UserProfile setFirebaseUserId(String firebaseUserId) {
         this.firebaseUserId = firebaseUserId;
+        return this;
+    }
+
+    public UserProfile setRole(String role, OnValidationSuccess lambdaSuccess, OnValidationFailure lambdaFailure) {
+        this.role = role;
+        onValid(profileValidationService.isRoleValid(getRole()), lambdaSuccess, lambdaFailure);
         return this;
     }
 }

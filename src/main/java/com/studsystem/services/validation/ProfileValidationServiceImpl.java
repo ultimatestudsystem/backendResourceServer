@@ -50,4 +50,9 @@ public class ProfileValidationServiceImpl extends ValidationServiceImpl implemen
     public String isAverageScoreValid(float averageScore) {
         return "";
     }
+
+    @Override
+    public String isRoleValid(String role) {
+        return "";
+    }
 }

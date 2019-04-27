@@ -10,4 +10,5 @@ public interface ProfileValidationService extends ValidationService {
     String isPhotoURLValid(String photo);
     String isAdditionalInfoValid(String additionalInfo);
     String isAverageScoreValid(float averageScore);
+    String isRoleValid(String role);
 }

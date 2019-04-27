@@ -21,43 +21,33 @@ import java.util.Optional;
 @Service
 public class FirebaseUserProfileServiceImpl implements FirebaseUserProfileService {
 
-    @Value("${secret.student}")
-    private String secretStudent;
-
-    @Value("${secret.teacher}")
-    private String secretTeacher;
-
-    private Map<String, String> secrets;
+//    @Value("${secret.student}")
+//    private String secretStudent;
+//
+//    @Value("${secret.teacher}")
+//    private String secretTeacher;
+//
+//    private Map<String, String> secrets;
 
     @Autowired
     private UserProfileFirebaseRepository userProfileFirebaseRepository;
 
-    public FirebaseUserProfileServiceImpl() {
-        secrets = new HashMap<>();
-        secrets.put(UserType.STUDENT.name().toLowerCase(),  secretStudent);
-        secrets.put(UserType.TEACHER.name().toLowerCase(),  secretTeacher);
-    }
+//    public FirebaseUserProfileServiceImpl() {
+//        secrets = new HashMap<>();
+//        secrets.put(UserType.STUDENT.name().toLowerCase(),  secretStudent);
+//        secrets.put(UserType.TEACHER.name().toLowerCase(),  secretTeacher);
+//    }
 
     @Override
-    public String createUser(String email, String password, String type, String birthDate, String firstName,
+    public String createUser(String email, String password, String role, String birthDate, String firstName,
                            String lastName, String middleName, String phone, String photo) throws FirebaseAuthException {
-        return createUser(email, password, type, birthDate, firstName, lastName, middleName, phone, photo, secrets.get(type));
-    }
-
-    @Override
-    public String createUser(String email, String password, String type, String birthDate, String firstName,
-                           String lastName, String middleName, String phone, String photo, String secret) throws FirebaseAuthException {
-
+//        return createUser(email, password, type, birthDate, firstName, lastName, middleName, phone, photo, secrets.get(type));
         StringBuilder answer = new StringBuilder();
-        type = type.toLowerCase();
+        role = role.toLowerCase();
         UserRecord.CreateRequest request = new UserRecord.CreateRequest();
         request.setEmail(email);
         request.setPassword(password);
         UserRecord user = FirebaseAuth.getInstance().createUser(request);
-        Map<String, Object> claims = new HashMap<>();
-        claims.put(type, true);
-        claims.put("secret", secret);
-        FirebaseAuth.getInstance().setCustomClaims(user.getUid(), claims);
 
         OnValidationFailure failureCallback = (dto, message) -> answer.append(message.concat(" "));
         OnValidationSuccess successCallback = (dto) -> {};
@@ -68,7 +58,9 @@ public class FirebaseUserProfileServiceImpl implements FirebaseUserProfileServic
                 .setLastName(lastName, successCallback, failureCallback)
                 .setMiddleName(middleName, successCallback, failureCallback)
                 .setPhone(phone, successCallback, failureCallback)
-                .setPhoto(photo, successCallback, failureCallback);
+                .setPhoto(photo, successCallback, failureCallback)
+                .setRole(role, successCallback, failureCallback)
+                .setFirebaseUserId(user.getUid());
 
         boolean answerIsEmpty = answer.toString().isEmpty();
         try {
@@ -80,6 +72,43 @@ public class FirebaseUserProfileServiceImpl implements FirebaseUserProfileServic
         }
         return answerIsEmpty ? "OK" : answer.toString();
     }
+
+//    @Override
+//    public String createUser(String email, String password, String type, String birthDate, String firstName,
+//                           String lastName, String middleName, String phone, String photo, String secret) throws FirebaseAuthException {
+//
+//        StringBuilder answer = new StringBuilder();
+//        type = type.toLowerCase();
+//        UserRecord.CreateRequest request = new UserRecord.CreateRequest();
+//        request.setEmail(email);
+//        request.setPassword(password);
+//        UserRecord user = FirebaseAuth.getInstance().createUser(request);
+//        Map<String, Object> claims = new HashMap<>();
+//        claims.put(type, true);
+//        claims.put("secret", secret);
+//        FirebaseAuth.getInstance().setCustomClaims(user.getUid(), claims);
+//
+//        OnValidationFailure failureCallback = (dto, message) -> answer.append(message.concat(" "));
+//        OnValidationSuccess successCallback = (dto) -> {};
+//        UserProfile newUserProfile = UserProfile.getInstance()
+//                .setEmail(email, successCallback, failureCallback)
+//                .setBirthDate(birthDate, successCallback, failureCallback)
+//                .setFirstName(firstName, successCallback, failureCallback)
+//                .setLastName(lastName, successCallback, failureCallback)
+//                .setMiddleName(middleName, successCallback, failureCallback)
+//                .setPhone(phone, successCallback, failureCallback)
+//                .setPhoto(photo, successCallback, failureCallback);
+//
+//        boolean answerIsEmpty = answer.toString().isEmpty();
+//        try {
+//            if (answerIsEmpty && !userProfileFirebaseRepository.save(newUserProfile)) {
+//                answer.append("could not save new user profile");
+//            }
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        return answerIsEmpty ? "OK" : answer.toString();
+//    }
 
     @Override
     public String deleteUser(String id) {

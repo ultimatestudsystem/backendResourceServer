@@ -3,7 +3,6 @@ package com.studsystem.controllers.rest;
 import com.studsystem.dto.StudyGroup;
 import com.studsystem.dto.UserProfile;
 import com.studsystem.interfaces.GroupManagementService;
-import com.studsystem.interfaces.HelperService;
 import com.studsystem.lambda.OnValidationFailure;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

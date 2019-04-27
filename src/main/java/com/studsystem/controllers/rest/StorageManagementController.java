@@ -27,14 +27,14 @@ import java.util.Optional;
 @RestController
 public class StorageManagementController {
 
-    @Value("${secret.admin}")
-    private String secretAdmin;
-
-    @Value("${secret.student}")
-    private String secretStudent;
-
-    @Value("${secret.teacher}")
-    private String secretTeacher;
+//    @Value("${secret.admin}")
+//    private String secretAdmin;
+//
+//    @Value("${secret.student}")
+//    private String secretStudent;
+//
+//    @Value("${secret.teacher}")
+//    private String secretTeacher;
 
 
     @Autowired
@@ -90,8 +90,9 @@ public class StorageManagementController {
     public ResponseEntity uploadSolution(@RequestParam MultipartFile file, @RequestParam String courseId,
                                          @RequestParam String taskId, @RequestParam String idToken,
                                          @RequestParam String commentary) {
+        FirebaseToken firebaseToken;
         try {
-            FirebaseAuth.getInstance().verifyIdToken(idToken);
+            firebaseToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
         } catch (FirebaseAuthException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(String.format("There is authentication error: %s", e.getErrorCode()));
@@ -99,7 +100,7 @@ public class StorageManagementController {
         if (idToken == null) {
             return ResponseEntity.badRequest().body("Cannot process the idToken parameter.");
         }
-        Optional<UserProfile> userProfileOptional = firebaseUserProfileService.getUserByFirebaseKey(idToken);
+        Optional<UserProfile> userProfileOptional = firebaseUserProfileService.getUserByFirebaseKey(firebaseToken.getUid());
         UserProfile userProfile;
         if (userProfileOptional.isPresent()) {
             userProfile = userProfileOptional.get();
@@ -134,8 +135,9 @@ public class StorageManagementController {
                                            @RequestParam String idToken, @RequestParam String solutionId,
                                            HttpServletResponse response) {
         // /storage/solution/download?courseId=1231adasd1312&taskId=12313asddas1231&userId=asdads123139vjfjf&solutionId=2112adsdjassda2
+        FirebaseToken firebaseToken;
         try {
-            FirebaseAuth.getInstance().verifyIdToken(idToken);
+            firebaseToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
         } catch (FirebaseAuthException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(String.format("There is authentication error: %s", e.getErrorCode()));
@@ -143,7 +145,7 @@ public class StorageManagementController {
         if (idToken == null) {
             return ResponseEntity.badRequest().body("Cannot process the idToken parameter.");
         }
-        Optional<UserProfile> userProfileOptional = firebaseUserProfileService.getUserByFirebaseKey(idToken);
+        Optional<UserProfile> userProfileOptional = firebaseUserProfileService.getUserByFirebaseKey(firebaseToken.getUid());
         UserProfile userProfile;
         if (userProfileOptional.isPresent()) {
             userProfile = userProfileOptional.get();
@@ -163,7 +165,7 @@ public class StorageManagementController {
             if (uploadDownloadService.downloadSolutionFile(solution, response)) {
                 return ResponseEntity.ok().build();
             } else {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("The firebase interaction was interrupted!");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("The firebase interaction was interrupted or file not found!");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -195,7 +197,7 @@ public class StorageManagementController {
             if (uploadDownloadService.downloadTaskFile(task, response)) {
                 return ResponseEntity.ok().build();
             } else {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("The firebase interaction was interrupted!");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("The firebase interaction was interrupted or file not found!");
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -47,7 +47,7 @@ public class ApplicationStartup implements ApplicationRunner {
             }catch (FirebaseAuthException e){
                 try {
                     firebaseUserService.createUser(adminEmail, adminPass, UserType.ADMIN.name().toLowerCase(),
-                            "NONE", "NONE", "NONE", "NONE", "NONE", "NONE", secretAdmin);
+                            "NONE", "NONE", "NONE", "NONE", "NONE", "NONE");
                 } catch (FirebaseAuthException e1) {
                     e1.printStackTrace();
                 }

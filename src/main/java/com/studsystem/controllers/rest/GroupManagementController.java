@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
@@ -23,8 +24,7 @@ public class GroupManagementController {
     public ResponseEntity createGroup(@RequestParam String groupName) {
         AtomicReference<String> groupValidationMessage = new AtomicReference<>();
         StudyGroup sg = StudyGroup.getInstance()
-            .setGroupIdentifier(groupName, (dto) -> {},
-                    (dto, message) -> groupValidationMessage.set(message));
+            .setStudentKeys(new ArrayList<>(), null, (dto, message) -> groupValidationMessage.set(message));
         if (!groupValidationMessage.get().isEmpty()) {
             return ResponseEntity.badRequest().body(groupValidationMessage.get());
         }

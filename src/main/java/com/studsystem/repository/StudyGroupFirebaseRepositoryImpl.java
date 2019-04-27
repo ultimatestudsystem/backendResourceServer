@@ -14,11 +14,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class StudyGroupFirebaseRepositoryImpl implements StudyGroupFirebaseRepository {
     @Override
     public boolean save(StudyGroup group) {
-        DatabaseReference studyGroupReference = FirebaseDatabase.getInstance().getReference("groups");
-        DatabaseReference newGroupReference = studyGroupReference.push();
-        AtomicBoolean result = new AtomicBoolean(true);
-        newGroupReference.child("group_identifier").setValue(group.getGroupIdentifier(), (error, ref) -> result.set(error != null));
-        return result.get();
+//        DatabaseReference studyGroupReference = FirebaseDatabase.getInstance().getReference("groups");
+//        DatabaseReference newGroupReference = studyGroupReference.push();
+//        AtomicBoolean result = new AtomicBoolean(true);
+//        newGroupReference.child("group_identifier").setValue(group.getGroupIdentifier(), (error, ref) -> result.set(error != null));
+//        return result.get();
+        return false;
     }
 
     @Override

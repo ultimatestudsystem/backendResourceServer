@@ -6,12 +6,14 @@ import com.studsystem.dto.Solution;
 import com.studsystem.dto.Task;
 import com.studsystem.interfaces.FirebaseUploadDownloadService;
 import com.studsystem.interfaces.repository.SolutionFirebaseRepository;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.crypto.Data;
@@ -48,7 +50,10 @@ public class FirebaseUploadDownloadServiceImpl implements FirebaseUploadDownload
             DatabaseReference thisTask = FirebaseDatabase.getInstance().getReference("tasks/" +
                     task.getCourseKey() + "/" + task.getKey());
             Map<String, String> linkValue = new HashMap<>();
-            String fileLink = "https://" + request.getContextPath() + "/" + file.getAbsolutePath();
+
+            String fileLink = "https://" + request.getContextPath() +
+                    String.format("/storage/task/download?courseId=%s&taskId=%s", task.getCourseKey(), task.getKey());
+
             l.log(Level.ALL, "Prepared link: " + fileLink);
             linkValue.put("task_file_link", fileLink);
             thisTask.setValueAsync(linkValue);
@@ -78,7 +83,11 @@ public class FirebaseUploadDownloadServiceImpl implements FirebaseUploadDownload
                     .getReference(String.format("solutions/%s/%s/%s/%s", solution.getCourseKey(),
                             solution.getUserKey(), solution.getTaskKey(), solution.getKey()));
             Map<String, String> linkValue = new HashMap<>();
-            String fileLink = "https://" + request.getContextPath() + "/" + file.getAbsolutePath();
+
+            String fileLink = "https://" + request.getContextPath()
+                    + String.format("/storage/solution/download?courseId=%s&taskId=%s&userId=%s&solutionId=%s",
+                        solution.getCourseKey(), solution.getTaskKey(), solution.getUserKey(), solution.getKey());
+
             l.log(Level.ALL, "Prepared link: " + fileLink);
             linkValue.put("solution_file_link", fileLink);
             thisSolution.setValueAsync(linkValue);
@@ -89,12 +98,39 @@ public class FirebaseUploadDownloadServiceImpl implements FirebaseUploadDownload
     }
 
     @Override
-    public boolean downloadSolutionFile(Solution solution, HttpServletResponse response) throws IOException {
+    public boolean downloadTaskFile(Task task, HttpServletResponse response) throws IOException {
+        File folder = new File(storagePath, "tasks/");
+        l.log(Level.ALL, String.format("Download from folder %s requested", folder.getAbsolutePath()));
+        if (folder.exists()) {
+            l.log(Level.ALL, "The folder exists");
+            File file = new File(folder, task.getCourseKey() + "-" + task.getKey());
+            l.log(Level.ALL, String.format("File %s requested", file.getAbsolutePath()));
+            if (file.exists()) {
+                String contentType = MimetypesFileTypeMap.getDefaultFileTypeMap().getContentType(file);
+                response.setContentType(contentType);
+                FileUtils.copyFile(file, response.getOutputStream());
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
-    public boolean downloadTaskFile(Task task, HttpServletResponse response) throws IOException {
+    public boolean downloadSolutionFile(Solution solution, HttpServletResponse response) throws IOException {
+        File folder = new File(storagePath, "solutions/");
+        l.log(Level.ALL, String.format("Download from folder %s requested", folder.getAbsolutePath()));
+        if (folder.exists()) {
+            l.log(Level.ALL, "The folder exists");
+            File file = new File(folder, solution.getCourseKey() + "-" + solution.getUserKey()
+                    + "-" + solution.getTaskKey() + "-" + solution.getKey());
+            l.log(Level.ALL, String.format("File %s requested", file.getAbsolutePath()));
+            if (file.exists()) {
+                String contentType = MimetypesFileTypeMap.getDefaultFileTypeMap().getContentType(file);
+                response.setContentType(contentType);
+                FileUtils.copyFile(file, response.getOutputStream());
+                return true;
+            }
+        }
         return false;
     }
 

@@ -28,16 +28,6 @@ import java.util.Optional;
 @RestController
 public class StorageManagementController {
 
-//    @Value("${secret.admin}")
-//    private String secretAdmin;
-//
-//    @Value("${secret.student}")
-//    private String secretStudent;
-//
-//    @Value("${secret.teacher}")
-//    private String secretTeacher;
-
-
     @Autowired
     private FirebaseUploadDownloadService uploadDownloadService;
 
@@ -46,15 +36,6 @@ public class StorageManagementController {
 
     @Autowired
     private HelperService helperService;
-
-//    @GetMapping("/storage/test")
-//    public ResponseEntity getUIDTest(@RequestParam String idToken) throws FirebaseAuthException {
-//        FirebaseToken firebaseToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
-//        if (idToken == null) {
-//            return ResponseEntity.badRequest().body("Cannot process the idToken parameter.");
-//        }
-//        return ResponseEntity.ok().body(firebaseToken.getUid());
-//    }
 
     @PostMapping("/storage/task/upload")
     public ResponseEntity uploadTask(@RequestParam MultipartFile file, @RequestParam String courseId,
@@ -176,8 +157,8 @@ public class StorageManagementController {
     }
 
     @GetMapping("/storage/task/download")
-    public ResponseEntity downloadTask(@RequestParam String courseId, @RequestParam String taskId, @RequestParam String idToken,
-            HttpServletResponse response) {
+    public ResponseEntity downloadTask(@RequestParam String courseId, @RequestParam String taskId,
+                                       @RequestParam String idToken, HttpServletResponse response) {
         // /storage/task/download?courseId=asd12312asdad&taskId=asdad12313asdad
         try {
             FirebaseAuth.getInstance().verifyIdToken(idToken);
@@ -206,33 +187,4 @@ public class StorageManagementController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(String.format("There is the IO error: %s", e.getLocalizedMessage()));
         }
     }
-
-
-//    @PutMapping("/storage/upload/{ref}")
-//    public ResponseEntity uploadFile(@PathVariable("ref") String ref,
-//                                     @RequestParam("refUID") String refUID,
-//                                     @RequestParam("file") MultipartFile multipartFile,
-//                                     @RequestParam String idToken,
-//                                     @RequestParam String subjectName) throws FirebaseAuthException, IOException {
-//        FirebaseToken firebaseToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
-//        if (firebaseToken.getUid() != null){
-//            uploadDownloadService.uploadFile(multipartFile, ref, refUID, subjectName, firebaseToken.getUid());
-//            return ResponseEntity.ok().build();
-//        } else {
-//            return ResponseEntity.badRequest().build();
-//        }
-//    }
-
-//    @GetMapping("/storage/download/{ref}/{filename:.+}")
-//    public ResponseEntity getFile(@PathVariable("ref") String ref,
-//                                  @RequestParam("refUID") String refUID,
-//                                  @PathVariable("filename") String filename,
-//                                  HttpServletResponse response) throws IOException {
-//        if (uploadDownloadService.downloadFile(ref, refUID, filename, response)) {
-//            return ResponseEntity.ok().build();
-//        }
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//    }
-
-
 }

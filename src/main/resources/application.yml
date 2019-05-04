@@ -4,6 +4,10 @@ spring:
     freemarker:
       template-loader-path: classpath:/templates
       suffix: .ftl
+  http:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
 
 storage:
   path: storage

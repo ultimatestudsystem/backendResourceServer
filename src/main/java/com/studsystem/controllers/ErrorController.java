@@ -18,6 +18,9 @@ public class ErrorController implements org.springframework.boot.autoconfigure.w
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
         Logger.getLogger(this.getClass().getName())
                 .log(Level.SEVERE, request.getAttribute(RequestDispatcher.ERROR_MESSAGE).toString());
+        Logger.getLogger(this.getClass().getName())
+                .log(Level.SEVERE, ((Exception) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION)).getMessage());
+
         if (status != null) {
 
             int statusCode = Integer.parseInt(status.toString());
